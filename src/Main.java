@@ -34,45 +34,39 @@ public class Main {
 	}
 	
 	private static int solve(int numNodes, Edge[] edges, int[] swe) {
-		int maxEnergy = 0;
-		int[] distance = new int[edges.length+1];
+		int[] energy = new int[numNodes];
 		
 		for (int i = 0; i < numNodes; i++) {
-			distance[i] = Integer.MAX_VALUE;
+			energy[i] = Integer.MIN_VALUE;
 		}
 		
-		distance[swe[0]] = swe[2];
+		energy[swe[0]] = swe[2];
 		boolean changes = false;
 		
 		for (int i = 1; i < numNodes; i++){
-			if (!(changes = updateDistances(edges, distance))) {
+			if (!(changes = updateEnergy(edges, energy))) {
 				break;
 			}
 		}
 		
-		int energyAtWizard = distance[swe[1]];
-		
-		if (changes && updateDistances(edges, distance)) {
-			if (distance[swe[1]] > energyAtWizard) {
-				return Integer.MAX_VALUE;
-			}
-			if (distance[swe[1]] < energyAtWizard) {
-				return 0;
-			}
+		if (changes && updateEnergy(edges, energy)) {
+			return Integer.MAX_VALUE;
 		}
 		
-		return energyAtWizard;
+		System.out.println(Arrays.toString(energy));
+		
+		return energy[swe[1]];
 	}
 	
-	private static boolean updateDistances(Edge[] edges, int[] distance) {
+	private static boolean updateEnergy(Edge[] edges, int[] energy) {
 		boolean changes = false;
 		
 		for (Edge edge : edges) {
-			if (distance[edge.source] < Integer.MAX_VALUE) {
-				int cost = distance[edge.destination] + edge.weight;
+			if (energy[edge.source] > Integer.MIN_VALUE) {
+				int cost = energy[edge.source] + edge.weight;
 				
-				if (cost < distance[edge.destination]) {
-					distance[edge.destination] = cost;
+				if (cost > energy[edge.destination]) {
+					energy[edge.destination] = cost;
 					changes = true;
 				}
 			}
