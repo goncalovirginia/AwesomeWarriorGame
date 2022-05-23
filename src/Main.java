@@ -53,8 +53,6 @@ public class Main {
 			return Integer.MAX_VALUE;
 		}
 		
-		System.out.println(Arrays.toString(energy));
-		
 		return energy[swe[1]];
 	}
 	
