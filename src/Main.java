@@ -53,7 +53,7 @@ public class Main {
 			return Integer.MAX_VALUE;
 		}
 		
-		return energy[swe[1]];
+		return Math.max(0, energy[swe[1]]);
 	}
 	
 	private static boolean updateEnergy(Edge[] edges, int[] energy) {
@@ -61,10 +61,10 @@ public class Main {
 		
 		for (Edge edge : edges) {
 			if (energy[edge.source] > Integer.MIN_VALUE) {
-				int cost = energy[edge.source] + edge.weight;
+				int newEnergy = energy[edge.source] + edge.weight;
 				
-				if (cost > energy[edge.destination]) {
-					energy[edge.destination] = cost;
+				if (newEnergy > energy[edge.destination]) {
+					energy[edge.destination] = newEnergy;
 					changes = true;
 				}
 			}
