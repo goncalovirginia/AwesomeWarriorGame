@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 	
@@ -35,42 +37,52 @@ public class Main {
 	
 	private static int solve(int numNodes, Edge[] edges, int[] swe) {
 		int[] energy = new int[numNodes];
+		boolean[] hasPathToWizard = new boolean[numNodes];
 		
 		for (int i = 0; i < numNodes; i++) {
 			energy[i] = Integer.MIN_VALUE;
 		}
 		
 		energy[swe[0]] = swe[2];
+		hasPathToWizard[swe[1]] = true;
 		boolean changes = false;
 		
 		for (int i = 1; i < numNodes; i++){
-			if (!(changes = updateEnergy(edges, energy))) {
+			if (!(changes = !updateEnergy(edges, energy, hasPathToWizard).isEmpty())) {
 				break;
 			}
 		}
 		
-		if (changes && updateEnergy(edges, energy)) {
-			return Integer.MAX_VALUE;
+		if (changes) {
+			for (int node : updateEnergy(edges, energy, hasPathToWizard)) {
+				if (hasPathToWizard[node]) {
+					return Integer.MAX_VALUE;
+				}
+			}
 		}
 		
 		return Math.max(0, energy[swe[1]]);
 	}
 	
-	private static boolean updateEnergy(Edge[] edges, int[] energy) {
-		boolean changes = false;
+	private static List<Integer> updateEnergy(Edge[] edges, int[] energy, boolean[] hasPathToWizard) {
+		List<Integer> updated = new LinkedList<>();
 		
 		for (Edge edge : edges) {
+			if (hasPathToWizard[edge.destination]) {
+				hasPathToWizard[edge.source] = true;
+			}
+			
 			if (energy[edge.source] > Integer.MIN_VALUE) {
 				int newEnergy = energy[edge.source] + edge.weight;
 				
 				if (newEnergy > energy[edge.destination]) {
 					energy[edge.destination] = newEnergy;
-					changes = true;
+					updated.add(edge.destination);
 				}
 			}
 		}
 		
-		return changes;
+		return updated;
 	}
 	
 	private static class Edge {
