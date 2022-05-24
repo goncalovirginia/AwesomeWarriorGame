@@ -25,10 +25,17 @@ public class Main {
 		
 		int[] swe = Arrays.stream(in.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 		
-		solve(cd[0], edges, swe);
+		int maxEnergy = solve(cd[0], edges, swe);
+		
+		if (maxEnergy > swe[2]) {
+			System.out.println(FULL_OF_ENERGY);
+		}
+		else {
+			System.out.println(maxEnergy);
+		}
 	}
 	
-	private static void solve(int numNodes, Edge[] edges, int[] swe) {
+	private static int solve(int numNodes, Edge[] edges, int[] swe) {
 		int[] energy = new int[numNodes];
 		boolean[] hasPathToWizard = new boolean[numNodes];
 		
@@ -45,19 +52,19 @@ public class Main {
 				break;
 			}
 			if (energy[swe[1]] > swe[2]) {
-				System.out.println(FULL_OF_ENERGY);
+				return Integer.MAX_VALUE;
 			}
 		}
 		
 		if (changes) {
 			for (int node : updateEnergy(edges, energy, hasPathToWizard)) {
 				if (hasPathToWizard[node]) {
-					System.out.println(FULL_OF_ENERGY);
+					return Integer.MAX_VALUE;
 				}
 			}
 		}
 		
-		System.out.println(Math.max(0, energy[swe[1]]));
+		return Math.max(0, energy[swe[1]]);
 	}
 	
 	private static List<Integer> updateEnergy(Edge[] edges, int[] energy, boolean[] hasPathToWizard) {
