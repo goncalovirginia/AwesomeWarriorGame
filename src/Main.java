@@ -74,7 +74,6 @@ public class Main {
 			if (hasPathToWizard[edge.destination]) {
 				hasPathToWizard[edge.source] = true;
 			}
-			
 			if (energy[edge.source] > Integer.MIN_VALUE) {
 				int newEnergy = energy[edge.source] + edge.weight;
 				
