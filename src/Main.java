@@ -52,7 +52,7 @@ public class Main {
 				break;
 			}
 			if (energy[swe[1]] > swe[2]) {
-				return Integer.MAX_VALUE;
+				return energy[swe[1]];
 			}
 		}
 		
